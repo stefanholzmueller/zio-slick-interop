@@ -8,17 +8,12 @@ val scalaTestVersion = "3.1.1"
 
 val compilerOptions = Seq(
   "-deprecation",
-  "-encoding",
-  "UTF-8",
   "-feature",
   "-language:existentials",
   "-language:higherKinds",
   "-unchecked",
-  "-Ywarn-dead-code",
-  "-Ywarn-numeric-widen",
   "-Xfuture",
-  "-Xfatal-warnings",
-  "-Ywarn-unused-import"
+  "-Xfatal-warnings"
 )
 
 val publishSettings = Seq(
@@ -72,8 +67,8 @@ val root = (project in file("."))
   .settings(
     organization := "io.scalac",
     name := "zio-slick-interop",
-    scalaVersion := "2.13.6",
-    crossScalaVersions := Seq("2.12.14", "2.13.6"),
+    scalaVersion := "3.1.0",
+    crossScalaVersions := Seq("2.12.14", "2.13.6", "3.1.0"),
     // JavaConverters ¯\_(ツ)_/¯
     Test / scalacOptions ~= (_ filterNot (_ == "-Xfatal-warnings")),
     scalacOptions ++= {
@@ -87,10 +82,10 @@ val root = (project in file("."))
     },
     testFrameworks := Seq(new TestFramework("zio.test.sbt.ZTestFramework")),
     libraryDependencies ++= Seq(
-      "com.typesafe.slick"     %% "slick"                       % slickVersion % Provided,
+     ("com.typesafe.slick"     %% "slick"                       % slickVersion % Provided).cross(CrossVersion.for3Use2_13),
       "dev.zio"                %% "zio"                         % zioVersion   % Provided,
       "dev.zio"                %% "zio-interop-reactivestreams" % zioRSVersion % Provided,
-      "org.scala-lang.modules" %% "scala-collection-compat"     % "2.5.0"      % Test,
+     ("org.scala-lang.modules" %% "scala-collection-compat"     % "2.5.0"      % Test).cross(CrossVersion.for3Use2_13),
       "com.h2database"          % "h2"                          % "1.4.200"    % Test,
       "dev.zio"                %% "zio-test-sbt"                % zioVersion   % Test
     )
